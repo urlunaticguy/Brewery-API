@@ -77,28 +77,34 @@ function HomeScreen() {
     setSearchResults(breweries);
   };
 
+  const callAPI = async () => {
+    const API_URL = "https://api.openbrewerydb.org/v1/breweries";
+
+    try {
+      axios.get(API_URL).then((response) => {
+        console.log(response.data);
+        setBreweriesCount(response.data.length);
+        setBreweriesData(response.data);
+        setSearchResults(response.data);
+      });
+    } catch (error) {
+      console.log("Error occured");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (searchedText === "") {
+      callAPI();
+    }
+  }, [searchedText]);
+
   useEffect(() => {
     console.log("Search results got changed");
     console.log(searchResults);
   }, [searchResults]);
 
   useEffect(() => {
-    const callAPI = async () => {
-      const API_URL = "https://api.openbrewerydb.org/v1/breweries";
-
-      try {
-        axios.get(API_URL).then((response) => {
-          console.log(response.data);
-          setBreweriesCount(response.data.length);
-          setBreweriesData(response.data);
-          setSearchResults(response.data);
-        });
-      } catch (error) {
-        console.log("Error occured");
-        console.log(error);
-      }
-    };
-
     callAPI();
     console.log("hello world");
   }, []);
